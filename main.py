@@ -32,13 +32,32 @@ def BFS(State_Queue, Max, Boat):
             if(not BackTracking(s)):
                 State_Queue.append(s)
         BFS(State_Queue, Max, Boat)
-
+        
+def DFS(State_Queue, Max, Boat):
+    Actual_State = State_Queue.pop()
+    Actual_State.print_state()
+    if(BackTracking(Actual_State)):
+        DFS(State_Queue, Max, Boat)
+    else:
+        Explored_States.append(Actual_State)
+        if(Final_State(Actual_State)):
+            return
+        Actual_State.generate_states(Max, Boat)
+        for s in Actual_State.states_children:
+            if(not BackTracking(s)):
+                State_Queue.append(s)
+        DFS(State_Queue, Max, Boat)
 
 if __name__ == "__main__":
     missionarys = int(raw_input("Quantos missionarios ao total :"))
     cannibals = int(raw_input("Quantos cannibais ao total :"))
     Boat = int(raw_input("Quantas pessoas cabem no barco: "))
+    print "| 0 - BFS | 1 - DFS |"
+    userChoise = int(raw_input("Qual metodo de busca voce deseja usar: "))
     initial_state = State(missionarys,cannibals, 0)
     State_Queue = []
     State_Queue.append(initial_state)
-    BFS(State_Queue, missionarys, Boat)
+    if userChoise == 0:
+        BFS(State_Queue, missionarys, Boat)
+    elif userChoise == 1:
+        DFS(State_Queue, missionarys, Boat)
