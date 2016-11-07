@@ -46,10 +46,8 @@ class State():
 
 
     def print_state(self):
-        print str(self.right_side_missionarys)
-        print str(self.right_side_cannibals)
-        print str(self.side_of_boat)
-        print '\n'
+        print "_______"
+        print "|" + str(self.right_side_missionarys) + "|" + str(self.right_side_cannibals) + "|" + str(self.side_of_boat) + "|"
 
     def print_children_states(self):
         for s in self.states_children:
