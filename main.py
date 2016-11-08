@@ -20,7 +20,7 @@ def Final_State(State):
 
 def BFS(State_Queue, Max, Boat):
     Actual_State = State_Queue.pop(0)
-    Actual_State.print_state()
+    Actual_State.print_state(Max)
     if(BackTracking(Actual_State)):
         BFS(State_Queue, Max, Boat)
     else:
@@ -33,12 +33,75 @@ def BFS(State_Queue, Max, Boat):
                 State_Queue.append(s)
         BFS(State_Queue, Max, Boat)
 
+def DFS(State_Queue, Max, Boat):
+    Actual_State = State_Queue.pop()
+    Actual_State.print_state(Max)
+    if(BackTracking(Actual_State)):
+        DFS(State_Queue, Max, Boat)
+    else:
+        Explored_States.append(Actual_State)
+        if(Final_State(Actual_State)):
+            return
+        Actual_State.generate_states(Max, Boat)
+        for s in Actual_State.states_children:
+            if(not BackTracking(s)):
+                State_Queue.append(s)
+        DFS(State_Queue, Max, Boat)
+
+def greedy(State_Queue, Max, Boat):
+    State_Queue = sorted(State_Queue, key=lambda state: state.greedyHeuristic(Max), reverse=False)
+    if len(State_Queue) == 0 :
+        print "De merda ai!"
+        return
+
+    Actual_State = State_Queue.pop(0)
+    del State_Queue[:]
+    Actual_State.print_state(Max)
+    if(BackTracking(Actual_State)):
+        greedy(State_Queue, Max, Boat)
+    else:
+        Explored_States.append(Actual_State)
+        if(Final_State(Actual_State)):
+            return
+        Actual_State.generate_states(Max, Boat)
+        for s in Actual_State.states_children:
+            if(not BackTracking(s)):
+                State_Queue.append(s)
+        greedy(State_Queue, Max, Boat)
+
+def aStar(State_Queue, Max, Boat):
+    State_Queue = sorted(State_Queue, key=lambda state: state.aStarHeuristic(Max), reverse=False)
+    Actual_State = State_Queue.pop(0)
+    Actual_State.print_state(Max)
+    if(BackTracking(Actual_State)):
+        aStar(State_Queue, Max, Boat)
+    else:
+        Explored_States.append(Actual_State)
+        if(Final_State(Actual_State)):
+            return
+        Actual_State.generate_states(Max, Boat)
+        for s in Actual_State.states_children:
+            if(not BackTracking(s)):
+                State_Queue.append(s)
+        aStar(State_Queue, Max, Boat)
 
 if __name__ == "__main__":
     missionarys = int(raw_input("Quantos missionarios ao total :"))
-    cannibals = int(raw_input("Quantos cannibais ao total :"))
+    cannibals = missionarys
     Boat = int(raw_input("Quantas pessoas cabem no barco: "))
+    print "___________________________________________"
+    print "| 0 - BFS | 1 - DFS | 2 - Greedy | 3 - A* |"
+    print "-------------------------------------------"
+    userChoise = int(raw_input("Qual metodo de busca voce deseja usar: "))
+
     initial_state = State(missionarys,cannibals, 0)
     State_Queue = []
     State_Queue.append(initial_state)
-    BFS(State_Queue, missionarys, Boat)
+    if userChoise == 0:
+        BFS(State_Queue, missionarys, Boat)
+    elif userChoise == 1:
+        DFS(State_Queue, missionarys, Boat)
+    elif userChoise == 2:
+        greedy(State_Queue, missionarys, Boat)
+    elif userChoise == 3:
+        aStar(State_Queue, missionarys, Boat)
