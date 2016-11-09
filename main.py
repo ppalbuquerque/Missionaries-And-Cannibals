@@ -18,9 +18,14 @@ def Final_State(State):
     else:
         return False
 
+def print_state_queue(State_Queue, Max):
+    print '| Fronteira |'
+    for s in State_Queue:
+        s.print_state(Max)
+
 def BFS(State_Queue, Max, Boat):
     Actual_State = State_Queue.pop(0)
-    Actual_State.print_state(Max)
+    print_state_queue(State_Queue, Max)
     if(BackTracking(Actual_State)):
         BFS(State_Queue, Max, Boat)
     else:
@@ -35,7 +40,7 @@ def BFS(State_Queue, Max, Boat):
 
 def DFS(State_Queue, Max, Boat):
     Actual_State = State_Queue.pop()
-    Actual_State.print_state(Max)
+    print_state_queue(State_Queue, Max)
     if(BackTracking(Actual_State)):
         DFS(State_Queue, Max, Boat)
     else:
@@ -56,7 +61,7 @@ def greedy(State_Queue, Max, Boat):
 
     Actual_State = State_Queue.pop(0)
     del State_Queue[:]
-    Actual_State.print_state(Max)
+    print_state_queue(State_Queue, Max)
     if(BackTracking(Actual_State)):
         greedy(State_Queue, Max, Boat)
     else:
@@ -72,7 +77,7 @@ def greedy(State_Queue, Max, Boat):
 def aStar(State_Queue, Max, Boat):
     State_Queue = sorted(State_Queue, key=lambda state: state.aStarHeuristic(Max), reverse=False)
     Actual_State = State_Queue.pop(0)
-    Actual_State.print_state(Max)
+    print_state_queue(State_Queue, Max)
     if(BackTracking(Actual_State)):
         aStar(State_Queue, Max, Boat)
     else:
@@ -86,7 +91,7 @@ def aStar(State_Queue, Max, Boat):
         aStar(State_Queue, Max, Boat)
 
 if __name__ == "__main__":
-    missionarys = int(raw_input("Quantos missionarios ao total :"))
+    missionarys = int(raw_input("Quantos missionarios e canibais ao total :"))
     cannibals = missionarys
     Boat = int(raw_input("Quantas pessoas cabem no barco: "))
     print "___________________________________________"
