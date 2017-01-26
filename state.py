@@ -6,6 +6,7 @@ class State():
         self.side_of_boat = side;
         self.states_children = []
         self.cost = 0
+        self.dad = None
 
     def number_of_missionarys_greater(self,States,Max):
         for s in States:
@@ -15,6 +16,7 @@ class State():
                     if(s.right_side_missionarys >= 0 and s.right_side_cannibals >= 0):
                         if(s.right_side_missionarys <= Max and s.right_side_cannibals <= Max):
                             s.cost = self.cost + 1
+                            s.dad = self
                             self.states_children.append(s)
 
     def generate_states(self, Max, Boat):
@@ -51,7 +53,12 @@ class State():
     def aStarHeuristic(self, Max):
         return self.greedyHeuristic(Max) + self.cost
 
-    def print_state(self):
+    def printDads(self, Max):
+        self.print_state(Max)
+        if self.dad is not None:
+            self.dad.printDads(Max)
+
+    def print_state(self, Max):
         print "_________________________"
         print "| G : " + str(self.cost) + " | H : "+ str(self.greedyHeuristic(Max)) + " | F : "+ str(self.aStarHeuristic(Max)) + "|"
         print "| M : " + str(self.right_side_missionarys) + " | C : " + str(self.right_side_cannibals) + "  | B : " + str(self.side_of_boat) + "|"

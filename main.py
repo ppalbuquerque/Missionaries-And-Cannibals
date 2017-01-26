@@ -10,6 +10,11 @@ def BackTracking(State):
                 return True
     return False
 
+def print_state_queue(State_Queue, Max):
+    print '| Fronteira |'
+    for s in State_Queue:
+        s.print_state(Max)
+
 def Final_State(State):
     if(State.right_side_missionarys == 0
     and State.right_side_cannibals == 0
@@ -19,13 +24,17 @@ def Final_State(State):
         return False
 
 def BFS(State_Queue, Max, Boat):
+    print_state_queue(State_Queue, Max)
     Actual_State = State_Queue.pop(0)
-    Actual_State.print_state(Max)
     if(BackTracking(Actual_State)):
         BFS(State_Queue, Max, Boat)
     else:
         Explored_States.append(Actual_State)
         if(Final_State(Actual_State)):
+            print "***********************************************"
+            print "\n\nTodos dos os estados visitados partindo da folha ate a Raiz: \n"
+            Actual_State.printDads(Max)
+            print "***********************************************"
             return
         Actual_State.generate_states(Max, Boat)
         for s in Actual_State.states_children:
@@ -35,12 +44,16 @@ def BFS(State_Queue, Max, Boat):
 
 def DFS(State_Queue, Max, Boat):
     Actual_State = State_Queue.pop()
-    Actual_State.print_state(Max)
+    print_state_queue(State_Queue, Max)
     if(BackTracking(Actual_State)):
         DFS(State_Queue, Max, Boat)
     else:
         Explored_States.append(Actual_State)
         if(Final_State(Actual_State)):
+            print "***********************************************"
+            print "\n\nTodos dos os estados visitados partindo da folha ate a Raiz: \n"
+            Actual_State.printDads(Max)
+            print "***********************************************"
             return
         Actual_State.generate_states(Max, Boat)
         for s in Actual_State.states_children:
@@ -55,13 +68,17 @@ def greedy(State_Queue, Max, Boat):
         return
 
     Actual_State = State_Queue.pop(0)
+    print_state_queue(State_Queue, Max)
     del State_Queue[:]
-    Actual_State.print_state(Max)
     if(BackTracking(Actual_State)):
         greedy(State_Queue, Max, Boat)
     else:
         Explored_States.append(Actual_State)
         if(Final_State(Actual_State)):
+            print "***********************************************"
+            print "\n\nTodos dos os estados visitados partindo da folha ate a Raiz: \n"
+            Actual_State.printDads(Max)
+            print "***********************************************"
             return
         Actual_State.generate_states(Max, Boat)
         for s in Actual_State.states_children:
@@ -72,12 +89,16 @@ def greedy(State_Queue, Max, Boat):
 def aStar(State_Queue, Max, Boat):
     State_Queue = sorted(State_Queue, key=lambda state: state.aStarHeuristic(Max), reverse=False)
     Actual_State = State_Queue.pop(0)
-    Actual_State.print_state(Max)
+    print_state_queue(State_Queue, Max)
     if(BackTracking(Actual_State)):
         aStar(State_Queue, Max, Boat)
     else:
         Explored_States.append(Actual_State)
         if(Final_State(Actual_State)):
+            print "***********************************************"
+            print "\n\nTodos dos os estados visitados partindo da folha ate a Raiz: \n"
+            Actual_State.printDads(Max)
+            print "***********************************************"
             return
         Actual_State.generate_states(Max, Boat)
         for s in Actual_State.states_children:
@@ -86,7 +107,7 @@ def aStar(State_Queue, Max, Boat):
         aStar(State_Queue, Max, Boat)
 
 if __name__ == "__main__":
-    missionarys = int(raw_input("Quantos missionarios ao total :"))
+    missionarys = int(raw_input("Quantos missionarios e canibais ao total :"))
     cannibals = missionarys
     Boat = int(raw_input("Quantas pessoas cabem no barco: "))
     print "___________________________________________"
